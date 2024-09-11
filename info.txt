@@ -1,0 +1,32 @@
+Class Labels:
+
+Corn___Common_Rust
+Corn___Gray_Leaf_Spot
+Corn___Healthy
+Corn___Northern_Leaf_Blight
+Corn___Northern_Leaf_Spot
+Corn___Phaeosphaeria_Leaf_Spot
+
+Corn Plant Species:
+
+Common Rust (1,100 images)
+Gray Leaf Spot (1,100 images)
+Healthy (1,100 images)
+Northern Leaf Blight (1,100 images)
+Northern Leaf Spot (1,100 images)
+Phaeosphaeria Leaf Spot (1,100 images)
+Total images: 8,163 images
+Total size: 127,217,664 bytes
+
+The images for the first four classes have been collected from the PlantVillage dataset [1]. PlantVillage is a standard and popular leaf image dataset for plant disease detection. We have augmented the images of some classes to address data imbalance issues.
+
+The Northern Leaf Spot images have been collected from the A. Ahmad [2] dataset. We initially found 276 images there and augmented the rest.
+
+The Phaeosphaeria Leaf Spot images have been collected from the Craze [3] dataset. We initially found 149 images there and augmented the rest.
+
+References:
+[1] D. P. Hughes and M. Salathe, “An open access repository of images on plant health to enable the development of mobile disease diagnostics,” 2015, [Online]. Available: http://arxiv.org/abs/1511.08060.
+
+[2] A. Ahmad, “CD&S Dataset,” Aug. 2022, doi: 10.17605/OSF.IO/S6RU5.
+
+[3] Craze, Hamish (2022). Diseases of maize in the field. University of Pretoria. Dataset. https://doi.org/10.25403/UPresearchdata.20237613.v1

@@ -1,0 +1,94 @@
+{
+    "diseases": {
+      "Corn___Common_Rust": {
+        "french_name": "Rouille Commune",
+        "causes": [
+          "Causée par le champignon Puccinia sorghi.",
+          "Conditions favorables : temps frais et humide, vent et présence de rosée prolongée."
+        ],
+        "symptoms": [
+          "Petites pustules de couleur rouge-brun sur les feuilles, souvent alignées le long des nervures.",
+          "Décoloration et flétrissement des feuilles en cas d'infestation grave."
+        ],
+        "treatments": [
+          "Fongicides recommandés : Azoxystrobine, Trifloxystrobine, Propiconazole.",
+          "Cultiver des variétés de maïs résistantes.",
+          "Rotation des cultures pour éviter l'accumulation de spores."
+        ]
+      },
+      "Corn___Gray_Leaf_Spot": {
+        "french_name": "Tache Grise Foliaire",
+        "causes": [
+          "Causée par le champignon Cercospora zeae-maydis.",
+          "Humidité élevée et températures modérées favorisent le développement."
+        ],
+        "symptoms": [
+          "Petites taches grises ou brunes rectangulaires sur les feuilles, qui s'élargissent et se rejoignent, formant des lésions longues.",
+          "Dépérissement des feuilles touchées, réduisant la photosynthèse."
+        ],
+        "treatments": [
+          "Fongicides recommandés : Mancozèbe, Strobilurine, Triazoles (comme le Propiconazole).",
+          "Utiliser des variétés de maïs résistantes.",
+          "Améliorer la circulation d'air entre les plants pour réduire l'humidité."
+        ]
+      },
+      "Corn___Healthy": {
+        "french_name": "Sain",
+        "causes": [
+          "Aucune maladie à traiter."
+        ],
+        "symptoms": [
+          "Aucun symptôme à signaler."
+        ],
+        "treatments": [
+          "Aucun traitement nécessaire."
+        ]
+      },
+      "Corn___Northern_Leaf_Blight": {
+        "french_name": "Brûlure Foliaire Nordique",
+        "causes": [
+          "Causée par le champignon Exserohilum turcicum.",
+          "Conditions favorables : températures modérées (18-27°C) et humidité élevée."
+        ],
+        "symptoms": [
+          "Lésions en forme de cigare de couleur grisâtre à brun sur les feuilles.",
+          "Dépérissement prématuré des feuilles, réduisant le rendement en grains."
+        ],
+        "treatments": [
+          "Fongicides recommandés : Azoxystrobine, Pyraclostrobine, Propiconazole.",
+          "Rotation des cultures et utilisation de variétés résistantes."
+        ]
+      },
+      "Corn___Northern_Leaf_Spot": {
+        "french_name": "Tache Foliaire Nordique",
+        "causes": [
+          "Causée par le champignon Bipolaris zeicola.",
+          "Les températures fraîches et humides favorisent l'infection."
+        ],
+        "symptoms": [
+          "Petites taches brunes ou noires sur les feuilles qui s'élargissent et fusionnent pour former des zones nécrotiques.",
+          "Affaiblissement des plantes et réduction du rendement en grains."
+        ],
+        "treatments": [
+          "Fongicides recommandés : Trifloxystrobine, Mancozèbe.",
+          "Pratiques culturales améliorées : espacement adéquat et contrôle des résidus de culture."
+        ]
+      },
+      "Corn___Phaeosphaeria_Leaf_Spot": {
+        "french_name": "Tache Foliaire Phaeosphaeria",
+        "causes": [
+          "Causée par le champignon Phaeosphaeria maydis.",
+          "Conditions humides et modérées favorisent le développement de la maladie."
+        ],
+        "symptoms": [
+          "Petites taches chlorotiques à brunes avec des bords sombres sur les feuilles.",
+          "Lésions qui peuvent fusionner, provoquant une décoloration extensive."
+        ],
+        "treatments": [
+          "Fongicides recommandés : Strobilurines, Mancozèbe.",
+          "Bonne gestion de l'irrigation et rotation des cultures."
+        ]
+      }
+    }
+  }
+  

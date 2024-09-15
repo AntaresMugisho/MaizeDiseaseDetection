@@ -4,3 +4,4 @@
 /train
 model.keras
 model_new.keras
+.env

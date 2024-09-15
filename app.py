@@ -1,44 +1,79 @@
+import json
+from pprint import pprint
+
 import streamlit as st
 import tensorflow as tf
 import numpy as np
 
 
-model = tf.keras.models.load_model('path/to/your_model.h5')
+# Load Model
+model = tf.keras.models.load_model('./model3.keras')
 
-def preprocess_image(image):
-    # Redimensionner l'image à la taille d'entrée du modèle
-    image = image.resize((224, 224))  # Ajustez la taille selon votre modèle
-    image_array = np.array(image)
-    image_array = image_array / 255.0  # Normaliser l'image
-    image_array = np.expand_dims(image_array, axis=0)  # Ajouter une dimension pour le lot
-    return image_array
+with open("db.json", "r") as file:
+    db = json.load(file)
 
-def predict_image(image_array):
-    predictions = model.predict(image_array)
-    # Remplacez ceci par la logique de traitement de vos prédictions
-    return predictions
+diseases = db.get("diseases")
+class_names = [key for key in diseases]
+
 
 #Tensorflow Model Prediction
-def model_prediction(test_image):
-    model = tf.keras.models.load_model("model.keras")
-    image = tf.keras.preprocessing.image.load_img(test_image,target_size=(128,128))
+def model_prediction(input_image):
+    image = tf.keras.preprocessing.image.load_img(input_image, target_size=(128,128))
     input_arr = tf.keras.preprocessing.image.img_to_array(image)
     input_arr = np.array([input_arr]) #convert single image to batch
     predictions = model.predict(input_arr)
     return np.argmax(predictions) #return index of max element
 
 
-import streamlit as st
 
 # Définition des fonctions pour chaque page
 def home():
-    st.title("Page d'accueil")
-    st.write("Bienvenue sur la page d'accueil de l'application.")
-
-def disease_prediction():
-    st.title("Prédiction des maladies")
+    st.title("Prédiction des maladies de Mais")
     st.write("Cette section est dédiée à la prédiction des maladies du maïs.")
-    # Ajoutez ici le code pour la prédiction des maladies
+
+    image = None
+
+    upl_image = st.file_uploader("Sélectionnez une image de maïs", type=["png", "jpg","jpeg"], accept_multiple_files=False, help="Cliquez pour sélectionner une image de ma¨is sur votre appareil.")
+    
+    if upl_image is not None:
+        image = upl_image
+        st.image(image, caption='Image téléchargée', use_column_width=True)
+
+    else:
+        cam_image = st.camera_input("Ou utilisezz votre caméra pour capturer une image.")
+        if cam_image is not None:
+            image = cam_image
+
+    
+    if image is not None:
+        # st.snow()
+        st.write("## Prédictions")
+        with st.spinner("Analyse en cours !"):
+            prediction_index = model_prediction(image)
+
+
+            predicted_disease = diseases.get(class_names[prediction_index])
+
+            st.write("### Maladie détectée")
+            st.success(predicted_disease.get("french_name"))
+
+            st.divider()
+            st.write("### Sympt^omes")
+            for symptom in predicted_disease.get("symptoms"):
+                st.write(f"- {symptom}")
+
+            st.divider()
+            st.write("### Causes")
+            for cause in predicted_disease.get("causes"):
+                st.write(f"- {cause}")
+
+
+            st.divider()
+            st.write("### Traitement")
+            for treatment in predicted_disease.get("treatments"):
+                st.write(f"- {treatment}")
+
+
 
 def treatment_advice():
     st.title("Conseils de traitement")
@@ -117,17 +152,24 @@ def contributors():
         st.write("---")
 
 # Barre latérale de navigation
-st.sidebar.title("Menu de Navigation")
+st.sidebar.title("Dashboard")
 menu = st.sidebar.radio(
     "Choisissez une page",
     ("Accueil", "Prédiction des Maladies", "Conseils de Traitement", "À Propos", "Contact", "Contributeurs")
 )
 
+st.sidebar.divider()
+st.sidebar.write("##### Comment trouvez-vous cette application ?")
+
+feedback = st.sidebar.feedback("stars")
+if feedback:
+    if ("feedback" not in st.session_state) or (st.session_state["feedback"] != feedback):
+        st.toast("Merci de votre avis. Cela nous permet d'améliorer cette application !")
+        st.session_state["feedback"] = feedback
+
 # Affichage de la page en fonction de la sélection du menu
 if menu == "Accueil":
     home()
-elif menu == "Prédiction des Maladies":
-    disease_prediction()
 elif menu == "Conseils de Traitement":
     treatment_advice()
 elif menu == "À Propos":
@@ -208,6 +250,7 @@ elif menu == 'Télécharger une Image':
 #     #Predict button
 #     if(st.button("Predict")):
 #         st.snow()
+
 #         st.write("Our Prediction")
 #         result_index = model_prediction(test_image)
 #         #Reading Labels

@@ -9,6 +9,7 @@ import numpy as np
 # Load Model
 model = tf.keras.models.load_model('./model3.keras')
 
+# Load database
 with open("db.json", "r") as file:
     db = json.load(file)
 
@@ -16,7 +17,7 @@ diseases = db.get("diseases")
 class_names = [key for key in diseases]
 
 
-#Tensorflow Model Prediction
+# Tensorflow Model Prediction
 def model_prediction(input_image):
     image = tf.keras.preprocessing.image.load_img(input_image, target_size=(128,128))
     input_arr = tf.keras.preprocessing.image.img_to_array(image)
@@ -25,11 +26,15 @@ def model_prediction(input_image):
     return np.argmax(predictions) #return index of max element
 
 
+def send_message(mail_from: str, message: str):
+    pass
+############################################################################################################""
 
-# Définition des fonctions pour chaque page
+# Page functions 
+
 def home():
-    st.title("Prédiction des maladies de Mais")
-    st.write("Cette section est dédiée à la prédiction des maladies du maïs.")
+    st.title("Prédiction des maladies de Maïs 🌿🔍")
+    st.write("#### Benvenue dans notre système de Prédiction des maladies de Maïs")
 
     image = None
 
@@ -40,7 +45,7 @@ def home():
         st.image(image, caption='Image téléchargée', use_column_width=True)
 
     else:
-        cam_image = st.camera_input("Ou utilisezz votre caméra pour capturer une image.")
+        cam_image = st.camera_input("Ou utilisez votre caméra pour en capturer une.")
         if cam_image is not None:
             image = cam_image
 
@@ -69,34 +74,35 @@ def home():
 
 
             st.divider()
-            st.write("### Traitement")
+            st.write("### Conseils de traitement")
             for treatment in predicted_disease.get("treatments"):
                 st.write(f"- {treatment}")
 
 
-
-def treatment_advice():
-    st.title("Conseils de traitement")
-    st.write("Cette section fournit des conseils sur les traitements des maladies du maïs.")
-    # Ajoutez ici le code pour afficher des conseils de traitement
-
 def about():
     st.title("À propos de l'application")
     about_text = """
-    # À Propos de l'Application
+    Bienvenue dans notre application de **Prédiction des Maladies du Maïs**. Cette application utilise l'intelligence artificielle pour détecter et identifier diverses maladies du maïs à partir d'images de leurs feuilles, et fournit des conseils sur les traitements appropriés.
 
-    Bienvenue dans notre application de **Prédiction des Maladies du Maïs**. Cette application utilise l'intelligence artificielle pour détecter et identifier diverses maladies du maïs à partir d'images de feuilles, et fournit des conseils sur les traitements appropriés.
+    ## Comment ça marche ?
 
-    ## Fonctionnement de l'Application
+     1. **Télécharment de l'image:** Cliquez sur **Accueil** dans la barre de navigation latérale et téléchargez une image d'une feuille de mais ou utilisez votre caméra pour capturer une image (vous devez autoriser l'utilisation de la caméra pour cette fin).
+     2. **Analyse:** Notre système va procéder au traitement de l'image en utilisant des algorithmes d'intelligence artificielle avancés pour identifier les maladies potentielles de la plante.
+     3. **Resultats:** En quelques poussières de secondes, les résultats et des recommandations pour des actions ultérieures que vous pouvez effectuer pour protéger vos plantes.
 
-    L'application est divisée en plusieurs sections :
-    - **Prédiction des Maladies**
-    - **Conseils de Traitement**
-    - **À Propos**
+    ## Pourquoi choisir notre système ?
+     - **Précision:** notre système utilise des techniques d'apprentissage automatique de pointe pour une détection des maladies avec une présision de 98%.
+     - **Convivial:** interface simple et intuitive pour une expérience utilisateur transparente.
+     - **Rapide et efficace:** recevez des résultats en secondes, ce qui permet une prise de décision rapide.
 
     ## Explications du Modèle d'IA
 
     L'application utilise un modèle de **Deep Learning** basé sur une architecture de réseau de neurones convolutifs (CNN) pour la classification des images.
+
+
+    ## Commencez maintenant !
+    Rndez-vous sur la page d'accueil pour télécharger une image et expérimentez la puisssance de notre système de Détection des maladies de Mais !
+ 
     """
     st.markdown(about_text)
 
@@ -104,18 +110,20 @@ def contact():
     st.title("Contactez-nous")
     st.write("Si vous avez des questions, suggestions ou commentaires, veuillez remplir le formulaire ci-dessous.")
     
-    # Formulaire de contact
+    # Contact form
     with st.form(key='contact_form'):
         name = st.text_input("Nom")
         email = st.text_input("Email")
         message = st.text_area("Message")
-        submit_button = st.form_submit_button(label='Envoyer')
+        submit = st.form_submit_button(label='Envoyer')
 
-        if submit_button:
+        if submit:
             if name and email and message:
+                send_message(mail_from=email, message=message)
                 st.success(f"Merci, {name}! Votre message a été envoyé avec succès.")
             else:
                 st.error("Veuillez remplir tous les champs.")
+
 
 def contributors():
     st.title("Contributeurs")
@@ -124,23 +132,47 @@ def contributors():
     # Liste des contributeurs
     contributors_list = [
         {
-            "name": "Jean Dupont",
-            "matricule": "JD001",
-            "photo": "https://example.com/photo1.jpg",  # Remplacez par l'URL de la photo
-            "presentation": "Développeur backend passionné par l'IA et le machine learning."
+            "name": "Mateso Emmanuel Prosper",
+            "matricule": "22100",
+            "photo": "https://gravatar.com/avatar/photo3.jpg",
+            "presentation": "Expert en réseaux de neurones et en traitement d'images."
         },
         {
-            "name": "Marie Curie",
-            "matricule": "MC002",
-            "photo": "https://example.com/photo2.jpg",
+            "name": "Mugisho Bashige Olivier",
+            "matricule": "22100313",
+            "photo": "https://gravatar.com/avatar/d2499868c45cff812a99ac6c1946c372?s=200",
+            "presentation": "Développeur backend passionné par l'IA et la sécurité informatique."
+        },
+        {
+            "name": "Muhindo Muhaviri Archippe",
+            "matricule": "22100",
+            "photo": "https://gravatar.com/avatar/photo2.jpg",
             "presentation": "Scientifique des données avec une expérience en agronomie."
         },
         {
-            "name": "Albert Einstein",
-            "matricule": "AE003",
-            "photo": "https://example.com/photo3.jpg",
+            "name": "Muhindo Rukeza Christian",
+            "matricule": "22100",
+            "photo": "https://gravatar.com/avatar/photo3.jpg",
             "presentation": "Expert en réseaux de neurones et en traitement d'images."
-        }
+        },
+        {
+            "name": "Mwenyemali Jonathan Johnson",
+            "matricule": "22100",
+            "photo": "https://gravatar.com/avatar/photo3.jpg",
+            "presentation": "Expert en réseaux de neurones et en traitement d'images."
+        },
+        {
+            "name": "Saidi Abdul",
+            "matricule": "22100",
+            "photo": "https://gravatar.com/avatar/photo3.jpg",
+            "presentation": "Expert en réseaux de neurones et en traitement d'images."
+        },
+        {
+            "name": "Zedi Bulimwengu",
+            "matricule": "22100",
+            "photo": "https://gravatar.com/avatar/photo3.jpg",
+            "presentation": "Expert en réseaux de neurones et en traitement d'images."
+        },
     ]
 
     # Affichage des contributeurs
@@ -151,7 +183,7 @@ def contributors():
         st.write(f"**Présentation :** {contributor['presentation']}")
         st.write("---")
 
-# Barre latérale de navigation
+
 st.sidebar.title("Dashboard")
 menu = st.sidebar.radio(
     "Choisissez une page",
@@ -167,32 +199,20 @@ if feedback:
         st.toast("Merci de votre avis. Cela nous permet d'améliorer cette application !")
         st.session_state["feedback"] = feedback
 
-# Affichage de la page en fonction de la sélection du menu
+
+# Menu navigation
+
 if menu == "Accueil":
     home()
-elif menu == "Conseils de Traitement":
-    treatment_advice()
+
 elif menu == "À Propos":
     about()
+
 elif menu == "Contact":
     contact()
+
 elif menu == "Contributeurs":
     contributors()
-elif menu == 'Télécharger une Image':
-    st.header('Téléchargez une Image')
-    
-    uploaded_file = st.file_uploader("Choisissez une image", type=["jpg", "png", "jpeg"])
-    
-    if uploaded_file is not None:
-        # Afficher l'image téléchargée
-        image = Image.open(uploaded_file)
-        st.image(image, caption='Image téléchargée', use_column_width=True)
-        
-        # Prétraiter l'image et faire des prédictions
-        image_array = preprocess_image(image)
-        predictions = predict_image(image_array)
-        
-        st.write('Prédictions:', predictions)
 
 
 #Sidebar

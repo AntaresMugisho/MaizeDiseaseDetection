@@ -1,9 +1,16 @@
 import json
-from pprint import pprint
+import os
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 import streamlit as st
 import tensorflow as tf
 import numpy as np
+from dotenv import load_dotenv
+
+# Load dot env file
+load_dotenv()
 
 
 # Load Model
@@ -16,7 +23,6 @@ with open("db.json", "r") as file:
 diseases = db.get("diseases")
 class_names = [key for key in diseases]
 
-
 # Tensorflow Model Prediction
 def model_prediction(input_image):
     image = tf.keras.preprocessing.image.load_img(input_image, target_size=(128,128))
@@ -26,9 +32,36 @@ def model_prediction(input_image):
     return np.argmax(predictions) #return index of max element
 
 
-def send_message(mail_from: str, message: str):
-    pass
-############################################################################################################""
+def send_mail(mail_from_name: str, mail_from_email: str, message: str):
+    host = os.environ["MAIL_HOST"]
+    sender_email = os.environ["MAIL_USERNAME"]
+    password = os.environ["MAIL_PASSWORD"]
+    receiver_email = os.environ["OWNER_EMAIL"]
+
+    mail = MIMEMultipart()
+    mail["From"] = f"{mail_from_name} <{mail_from_email}>"
+    mail["To"] = receiver_email
+    mail["ReplyTo"] = mail_from_name
+    mail["Subject"] = "Maize Disease Detection"
+
+    html_body = f"""
+    <html>
+    <body>
+        <p>{message}</p>
+    </body>
+    </html>
+    """
+    mail.attach(MIMEText(html_body, "html"))
+
+    try:
+        with smtplib.SMTP(host, 587) as server:
+            server.starttls()
+            server.login(sender_email, password)
+            server.send_message(mail)
+    except Exception as e:
+        print(e)
+    
+#####################################################################################
 
 # Page functions 
 
@@ -55,7 +88,6 @@ def home():
         st.write("## Prédictions")
         with st.spinner("Analyse en cours !"):
             prediction_index = model_prediction(image)
-
 
             predicted_disease = diseases.get(class_names[prediction_index])
 
@@ -101,8 +133,7 @@ def about():
 
 
     ## Commencez maintenant !
-    Rndez-vous sur la page d'accueil pour télécharger une image et expérimentez la puisssance de notre système de Détection des maladies de Mais !
- 
+    Rendez-vous sur la page d'accueil pour télécharger une image et expérimentez la puisssance de notre système de Détection des maladies de Mais !
     """
     st.markdown(about_text)
 
@@ -111,7 +142,7 @@ def contact():
     st.write("Si vous avez des questions, suggestions ou commentaires, veuillez remplir le formulaire ci-dessous.")
     
     # Contact form
-    with st.form(key='contact_form'):
+    with st.form(key='contact_form', clear_on_submit=True):
         name = st.text_input("Nom")
         email = st.text_input("Email")
         message = st.text_area("Message")
@@ -119,8 +150,9 @@ def contact():
 
         if submit:
             if name and email and message:
-                send_message(mail_from=email, message=message)
-                st.success(f"Merci, {name}! Votre message a été envoyé avec succès.")
+                with st.spinner("Envoie en cours..."):
+                    send_mail(mail_from_name=name, mail_from_email=email, message=message)
+                    st.success(f"Merci, {name}! Votre message a été envoyé avec succès.")
             else:
                 st.error("Veuillez remplir tous les champs.")
 
@@ -135,7 +167,7 @@ def contributors():
             "name": "Mateso Emmanuel Prosper",
             "matricule": "22100",
             "photo": "https://gravatar.com/avatar/photo3.jpg",
-            "presentation": "Expert en réseaux de neurones et en traitement d'images."
+            "presentation": "Expert en Cybrsécurité."
         },
         {
             "name": "Mugisho Bashige Olivier",
@@ -147,47 +179,56 @@ def contributors():
             "name": "Muhindo Muhaviri Archippe",
             "matricule": "22100",
             "photo": "https://gravatar.com/avatar/photo2.jpg",
-            "presentation": "Scientifique des données avec une expérience en agronomie."
+            "presentation": "Data scientist avec une expérience en agronomie."
         },
         {
             "name": "Muhindo Rukeza Christian",
             "matricule": "22100",
             "photo": "https://gravatar.com/avatar/photo3.jpg",
-            "presentation": "Expert en réseaux de neurones et en traitement d'images."
+            "presentation": "Expert en traitement d'images."
         },
         {
             "name": "Mwenyemali Jonathan Johnson",
             "matricule": "22100",
             "photo": "https://gravatar.com/avatar/photo3.jpg",
-            "presentation": "Expert en réseaux de neurones et en traitement d'images."
+            "presentation": "Data scientist."
         },
         {
             "name": "Saidi Abdul",
             "matricule": "22100",
             "photo": "https://gravatar.com/avatar/photo3.jpg",
-            "presentation": "Expert en réseaux de neurones et en traitement d'images."
+            "presentation": "Chercheur en IA."
         },
         {
             "name": "Zedi Bulimwengu",
             "matricule": "22100",
             "photo": "https://gravatar.com/avatar/photo3.jpg",
-            "presentation": "Expert en réseaux de neurones et en traitement d'images."
+            "presentation": "Expert en réseaux."
         },
     ]
 
     # Affichage des contributeurs
     for contributor in contributors_list:
-        st.image(contributor["photo"], width=150)
-        st.write(f"**Nom :** {contributor['name']}")
-        st.write(f"**Matricule :** {contributor['matricule']}")
-        st.write(f"**Présentation :** {contributor['presentation']}")
-        st.write("---")
+        st.markdown(f"""
+            <div style="display:flex;flex-direction:column;align-items:center;gap:20px;">
+                <img src="{contributor["photo"]}" width="150px" style="border-radius:50%;margin-left:auto;margin-right:auto;" />
+                <p style="text-align:center;"> <span style="color:gray">{contributor["matricule"]}</span> </br> <strong style="font-size:24px">{contributor["name"]}</strong> </br>{contributor["presentation"]}</p>
+            </div>
+            """, 
+            unsafe_allow_html=True
+        )
+        st.divider()
 
+
+
+###############################
+
+# App construction
 
 st.sidebar.title("Dashboard")
 menu = st.sidebar.radio(
     "Choisissez une page",
-    ("Accueil", "Prédiction des Maladies", "Conseils de Traitement", "À Propos", "Contact", "Contributeurs")
+    ("Accueil", "À Propos", "Contact", "Contributeurs")
 )
 
 st.sidebar.divider()
@@ -201,7 +242,6 @@ if feedback:
 
 
 # Menu navigation
-
 if menu == "Accueil":
     home()
 
@@ -213,79 +253,3 @@ elif menu == "Contact":
 
 elif menu == "Contributeurs":
     contributors()
-
-
-#Sidebar
-# st.sidebar.title("Dashboard")
-# app_mode = st.sidebar.selectbox("Select Page",["Home","About","Disease Recognition"])
-
-# #Main Page
-# if(app_mode=="Home"):
-#     st.header("Plant Desease Detection")
-#     # image_path = "home_page.jpeg"
-#     # st.image(image_path,use_column_width=True)
-#     st.markdown("""
-#     Welcome to the Plant Disease Recognition System! 🌿🔍
-    
-#     Our mission is to help in identifying plant diseases efficiently. Upload an image of a plant, and our system will analyze it to detect any signs of diseases. Together, let's protect our crops and ensure a healthier harvest!
-
-#     ### How It Works
-#     1. **Upload Image:** Go to the **Disease Recognition** page and upload an image of a plant with suspected diseases.
-#     2. **Analysis:** Our system will process the image using advanced algorithms to identify potential diseases.
-#     3. **Results:** View the results and recommendations for further action.
-
-#     ### Why Choose Us?
-#     - **Accuracy:** Our system utilizes state-of-the-art machine learning techniques for accurate disease detection.
-#     - **User-Friendly:** Simple and intuitive interface for seamless user experience.
-#     - **Fast and Efficient:** Receive results in seconds, allowing for quick decision-making.
-
-#     ### Get Started
-#     Click on the **Disease Recognition** page in the sidebar to upload an image and experience the power of our Plant Disease Recognition System!
-
-#     ### About Us
-#     Learn more about the project, our team, and our goals on the **About** page.
-#     """)
-
-# #About Project
-# elif(app_mode=="About"):
-#     st.header("About")
-#     st.markdown("""
-#                 #### About Dataset
-#                 This dataset is recreated using offline augmentation from the original dataset.The original dataset can be found on this github repo.
-#                 This dataset consists of about 87K rgb images of healthy and diseased crop leaves which is categorized into 38 different classes.The total dataset is divided into 80/20 ratio of training and validation set preserving the directory structure.
-#                 A new directory containing 33 test images is created later for prediction purpose.
-#                 #### Content
-#                 1. train (70295 images)
-#                 2. test (33 images)
-#                 3. validation (17572 images)
-
-#                 """)
-
-# #Prediction Page
-# elif(app_mode=="Disease Recognition"):
-#     st.header("Disease Recognition")
-#     test_image = st.file_uploader("Choose an Image:")
-#     if(st.button("Show Image")):
-#         st.image(test_image,width=4,use_column_width=True)
-#     #Predict button
-#     if(st.button("Predict")):
-#         st.snow()
-
-#         st.write("Our Prediction")
-#         result_index = model_prediction(test_image)
-#         #Reading Labels
-#         class_name = ['Apple___Apple_scab', 'Apple___Black_rot', 'Apple___Cedar_apple_rust', 'Apple___healthy',
-#                     'Blueberry___healthy', 'Cherry_(including_sour)___Powdery_mildew', 
-#                     'Cherry_(including_sour)___healthy', 'Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot', 
-#                     'Corn_(maize)___Common_rust_', 'Corn_(maize)___Northern_Leaf_Blight', 'Corn_(maize)___healthy', 
-#                     'Grape___Black_rot', 'Grape___Esca_(Black_Measles)', 'Grape___Leaf_blight_(Isariopsis_Leaf_Spot)', 
-#                     'Grape___healthy', 'Orange___Haunglongbing_(Citrus_greening)', 'Peach___Bacterial_spot',
-#                     'Peach___healthy', 'Pepper,_bell___Bacterial_spot', 'Pepper,_bell___healthy', 
-#                     'Potato___Early_blight', 'Potato___Late_blight', 'Potato___healthy', 
-#                     'Raspberry___healthy', 'Soybean___healthy', 'Squash___Powdery_mildew', 
-#                     'Strawberry___Leaf_scorch', 'Strawberry___healthy', 'Tomato___Bacterial_spot', 
-#                     'Tomato___Early_blight', 'Tomato___Late_blight', 'Tomato___Leaf_Mold', 
-#                     'Tomato___Septoria_leaf_spot', 'Tomato___Spider_mites Two-spotted_spider_mite', 
-#                     'Tomato___Target_Spot', 'Tomato___Tomato_Yellow_Leaf_Curl_Virus', 'Tomato___Tomato_mosaic_virus',
-#                       'Tomato___healthy']
-#         st.success("Model is Predicting it's a {}".format(class_name[result_index]))

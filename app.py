@@ -12,7 +12,6 @@ from dotenv import load_dotenv
 # Load dot env file
 load_dotenv()
 
-
 # Load Model
 model = tf.keras.models.load_model('./model3.keras')
 
@@ -28,7 +27,8 @@ def model_prediction(input_image):
     image = tf.keras.preprocessing.image.load_img(input_image, target_size=(128,128))
     input_arr = tf.keras.preprocessing.image.img_to_array(image)
     input_arr = np.array([input_arr]) #convert single image to batch
-    predictions = model.predict(input_arr)
+    predictions: np.ndarray = model.predict(input_arr)
+    # print(predictions.all)
     return np.argmax(predictions) #return index of max element
 
 
@@ -95,7 +95,7 @@ def home():
             st.success(predicted_disease.get("french_name"))
 
             st.divider()
-            st.write("### Sympt^omes")
+            st.write("### Symptômes")
             for symptom in predicted_disease.get("symptoms"):
                 st.write(f"- {symptom}")
 
@@ -133,7 +133,7 @@ def about():
 
 
     ## Commencez maintenant !
-    Rendez-vous sur la page d'accueil pour télécharger une image et expérimentez la puisssance de notre système de Détection des maladies de Mais !
+    Rendez-vous sur la page d'accueil pour télécharger une image et expérimentez la puisssance de notre système de Détection des maladies de Maïs !
     """
     st.markdown(about_text)
 
@@ -163,12 +163,12 @@ def contributors():
 
     # Liste des contributeurs
     contributors_list = [
-        {
-            "name": "Mateso Emmanuel Prosper",
-            "matricule": "22100",
-            "photo": "https://gravatar.com/avatar/photo3.jpg",
-            "presentation": "Expert en Cybrsécurité."
-        },
+        # {
+        #     "name": "Mateso Emmanuel Prosper",
+        #     "matricule": "22100283",
+        #     "photo": "https://gravatar.com/avatar/photo3.jpg",
+        #     "presentation": "Expert en Cybrsécurité."
+        # },
         {
             "name": "Mugisho Bashige Olivier",
             "matricule": "22100313",
@@ -177,31 +177,31 @@ def contributors():
         },
         {
             "name": "Muhindo Muhaviri Archippe",
-            "matricule": "22100",
+            "matricule": "22100319",
             "photo": "https://gravatar.com/avatar/photo2.jpg",
             "presentation": "Data scientist avec une expérience en agronomie."
         },
         {
             "name": "Muhindo Rukeza Christian",
-            "matricule": "22100",
+            "matricule": "22100321",
             "photo": "https://gravatar.com/avatar/photo3.jpg",
             "presentation": "Expert en traitement d'images."
         },
         {
             "name": "Mwenyemali Jonathan Johnson",
-            "matricule": "22100",
+            "matricule": "22100344",
             "photo": "https://gravatar.com/avatar/photo3.jpg",
-            "presentation": "Data scientist."
+            "presentation": "Chef de projet"
         },
-        {
-            "name": "Saidi Abdul",
-            "matricule": "22100",
-            "photo": "https://gravatar.com/avatar/photo3.jpg",
-            "presentation": "Chercheur en IA."
-        },
+        # {
+        #     "name": "Saidi Abdul",
+        #     "matricule": "22100",
+        #     "photo": "https://gravatar.com/avatar/photo3.jpg",
+        #     "presentation": "Chercheur en IA."
+        # },
         {
             "name": "Zedi Bulimwengu",
-            "matricule": "22100",
+            "matricule": "22100465",
             "photo": "https://gravatar.com/avatar/photo3.jpg",
             "presentation": "Expert en réseaux."
         },

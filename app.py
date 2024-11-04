@@ -193,12 +193,7 @@ def contributors():
             "photo": "https://gravatar.com/avatar/photo3.jpg",
             "presentation": "Chef de projet"
         },
-        # {
-        #     "name": "Saidi Abdul",
-        #     "matricule": "22100",
-        #     "photo": "https://gravatar.com/avatar/photo3.jpg",
-        #     "presentation": "Chercheur en IA."
-        # },
+         
         {
             "name": "Zedi Bulimwengu",
             "matricule": "22100465",

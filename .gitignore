@@ -2,6 +2,6 @@
 /valid
 /test
 /train
-model.keras
-model_new.keras
+*.keras
 .env
+maize/
